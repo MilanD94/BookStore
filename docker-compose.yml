@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  bookstore.api:
+    image: ${DOCKER_REGISTRY-}bookstoreapi
+    ports:
+      - "8080:8080"
+    networks:
+      - ww
+    build:
+      context: .
+      dockerfile: BookStore.API/Dockerfile
+
+  bookstore.migrationrunner:
+    image: ${DOCKER_REGISTRY-}bookstoremigrationrunner
+    networks:
+      - ww
+    build:
+      context: .
+      target: final
+      dockerfile: BookStore.MigrationRunner/Dockerfile
+    depends_on:
+      - bookstore.postgresdb
+
+  bookstore.postgresdb:
+    networks:
+      - ww
+    image: "postgres"
+    container_name: bookstore.postgresdb
+
+  pgAdmin:
+    networks:
+      - ww
+    image: "dpage/pgadmin4"
+    container_name: pgAdmin
+
+networks:
+  ww:
+volumes:
+  local_pgdata:
+  pgadmin-data:

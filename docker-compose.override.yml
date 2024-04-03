@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  bookstore.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__PostgresDb__Server=bookstore.postgresdb
+      - ConnectionStrings__PostgresDb__Database=ww-demo-db
+      - ConnectionStrings__PostgresDb__Username=postgres
+      - ConnectionStrings__PostgresDb__Password=Pass123_
+      - ConnectionStrings__PostgresDb__Port=5432
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  bookstore.migrationrunner:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ConnectionStrings__PostgresDb__Server=bookstore.postgresdb
+      - ConnectionStrings__PostgresDb__Database=ww-demo-db
+      - ConnectionStrings__PostgresDb__Username=postgres
+      - ConnectionStrings__PostgresDb__Password=Pass123_
+      - ConnectionStrings__PostgresDb__Port=5432
+
+  bookstore.postgresdb:
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Pass123_
+      - POSTGRES_DB=ww-demo-db
+    command: 
+      - -c
+      - max_prepared_transactions=100
+    ports:
+      - 5432:5432
+
+  pgAdmin:
+    container_name: pgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: developer@dev.com
+      PGADMIN_DEFAULT_PASSWORD: Pg123_1
+    ports:
+      - "999:80"
