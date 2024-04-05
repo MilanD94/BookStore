@@ -4,5 +4,8 @@
     {
         public Guid Id { get; set; }
         public string? Amount { get; set; }
+
+        public virtual List<Book>? Books { get; set; }
+
     }
 }
