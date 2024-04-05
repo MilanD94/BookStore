@@ -9,5 +9,7 @@
         public string? City { get; set; }
         public string? TotalAmount { get; set; }
         public string? Status { get; set; }
+        public virtual List<Book>? Books { get; set; }
+
     }
 }
