@@ -1,4 +1,6 @@
-﻿using BookStore.Application.Books.Queries.GetAllBooks;
+﻿using BookStore.API.Requests;
+using BookStore.Application.Books.Commands;
+using BookStore.Application.Books.Queries.GetAllBooks;
 using BookStore.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +25,22 @@ namespace BookStore.API.Controllers
             var result = await _mediator.Send(new GetAllBooksQuery());
 
             return result;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> AddBook(AddBookRequest request)
+        {
+            await _mediator.Send(new AddBookCommand
+            {
+                Name = request.Name,
+                Description = request.Description,
+                Author = request.Author,
+                PublishDate = request.PublishDate,
+            });
+
+            return Ok();
         }
 
     }

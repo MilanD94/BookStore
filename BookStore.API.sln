@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.API", "BookStore.API\BookStore.API.csproj", "{5E2D3F73-9CF2-4E09-97D8-0D3F3B3D1815}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.API", "BookStore.API\BookStore.API.csproj", "{5E2D3F73-9CF2-4E09-97D8-0D3F3B3D1815}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Application", "BookStore.Application\BookStore.Application.csproj", "{37A259D3-3E2C-43D0-96D4-F131EE602D6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Application", "BookStore.Application\BookStore.Application.csproj", "{37A259D3-3E2C-43D0-96D4-F131EE602D6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Data", "BookStore.Data\BookStore.Data.csproj", "{F3505533-EF44-404F-85A8-0AC4C8E4F881}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Data", "BookStore.Data\BookStore.Data.csproj", "{F3505533-EF44-404F-85A8-0AC4C8E4F881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.MigrationRunner", "BookStore.MigrationRunner\BookStore.MigrationRunner.csproj", "{7B895BE8-86BA-414F-80ED-54B2D8D065EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.MigrationRunner", "BookStore.MigrationRunner\BookStore.MigrationRunner.csproj", "{7B895BE8-86BA-414F-80ED-54B2D8D065EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Models", "BookStore.Models\BookStore.Models.csproj", "{C625A475-C937-4E63-83DB-1524375222DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Models", "BookStore.Models\BookStore.Models.csproj", "{C625A475-C937-4E63-83DB-1524375222DD}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3EBF2A1E-C529-4B86-AD67-B1C1F2F8B2DF}"
 EndProject
