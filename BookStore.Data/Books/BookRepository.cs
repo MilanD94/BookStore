@@ -17,6 +17,15 @@ namespace BookStore.Data.Books
             return await Task.Run(() => GetQueryable().ToList());
         }
 
+        public async Task<Book?> AddBook(Book book)
+        {
+            var result = _apiDbContext.Books?.Add(book)!;
+
+            await _apiDbContext.SaveChangesAsync();
+ 
+            return result.Entity;
+        }
+
         private IQueryable<Book?> GetQueryable()
         {
             var books = _apiDbContext.Books;
