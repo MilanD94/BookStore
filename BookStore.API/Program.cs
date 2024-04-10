@@ -1,4 +1,5 @@
 using BookStore.API.Common.Mappers;
+using BookStore.Application.Books.Commands.Common;
 using BookStore.Application.Books.Queries.GetAllBooks;
 using BookStore.Application.Metrics;
 using BookStore.Data.Extensions;
@@ -37,7 +38,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Get
 
 builder.Services.AddServiceDataLayer(builder.Configuration);
 
-builder.Services.AddAutoMapper(typeof(GetAllBooksProfileMapper));
+builder.Services.AddAutoMapper(typeof(BookProfileMapper));
 builder.Services.AddAutoMapper(typeof(BooksProfileMapper));
 
 var app = builder.Build();
