@@ -14,6 +14,8 @@ namespace BookStore.Application.Metrics
         private readonly Counter<int> _categoriesAddedCount;
         private readonly Counter<int> _categoriesDeletedCount;
         private readonly Counter<int> _categoriesUpdatedCount;
+        private ObservableGauge<int> _totalCategoriesGauge { get; }
+        private int _totalCategories = 0;
 
         // Order meters
         private readonly Histogram<double> _ordersPriceHistogram;
@@ -34,6 +36,7 @@ namespace BookStore.Application.Metrics
             _categoriesAddedCount = meter.CreateCounter<int>("categories_added_count");
             _categoriesDeletedCount = meter.CreateCounter<int>("categories_deleted_count");
             _categoriesUpdatedCount = meter.CreateCounter<int>("categories_updated_count");
+            _totalCategoriesGauge = meter.CreateObservableGauge<int>("total_categories_gauge", () => _totalCategories);
 
             _ordersPriceHistogram = meter.CreateHistogram<double>("orders_price");
             _numberOfBooksPerOrderHistogram = meter.CreateHistogram<int>("orders_number_of_books");
@@ -52,6 +55,8 @@ namespace BookStore.Application.Metrics
         public void AddCategory() => _categoriesAddedCount.Add(1);
         public void DeleteCategory() => _categoriesDeletedCount.Add(1);
         public void UpdateCategory() => _categoriesUpdatedCount.Add(1);
+        public void IncreaseTotalCategories() => _totalCategories++;
+        public void DecreaseTotalCategories() => _totalCategories--;
 
         // Orders meters
         public void RecordOrderTotalPrice(double price) => _ordersPriceHistogram.Record(price);

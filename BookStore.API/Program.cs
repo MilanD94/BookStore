@@ -1,3 +1,4 @@
+using BookStore.API.Common.Mappers;
 using BookStore.Application.Books.Queries.GetAllBooks;
 using BookStore.Application.Metrics;
 using BookStore.Data.Extensions;
@@ -6,7 +7,6 @@ using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<BookStoreMetrics>();
-
 
 builder.Services.AddOpenTelemetry()
     .WithMetrics(builder =>
@@ -18,10 +18,16 @@ builder.Services.AddOpenTelemetry()
         builder.AddView("http.server.request.duration",
             new ExplicitBucketHistogramConfiguration
             {
-                Boundaries = new double[] { 0, 0.005, 0.01, 0.025, 0.05,
-                       0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10 }
+                Boundaries = [ 0, 0.005, 0.01, 0.025, 0.05,
+                       0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10 ]
             });
     });
+
+builder.Services.AddApiVersioning(o =>
+{
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.ReportApiVersions = true;
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -32,6 +38,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Get
 builder.Services.AddServiceDataLayer(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(GetAllBooksProfileMapper));
+builder.Services.AddAutoMapper(typeof(BooksProfileMapper));
 
 var app = builder.Build();
 
