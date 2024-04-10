@@ -1,4 +1,6 @@
 ﻿using BookStore.Data.Books;
+using BookStore.Data.Categories;
+using BookStore.Data.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,8 @@ namespace BookStore.Data.Extensions
             });
 
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
     }
 }

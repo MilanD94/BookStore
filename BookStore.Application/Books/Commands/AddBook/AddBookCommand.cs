@@ -1,6 +1,9 @@
-﻿namespace BookStore.API.Requests
+﻿using BookStore.Application.DTOs;
+using MediatR;
+
+namespace BookStore.Application.Books.Commands.AddBook
 {
-    public class AddBookRequest
+    public class AddBookCommand : IRequest<BookRepresentation>
     {
         public string? Name { get; set; }
         public string? Author { get; set; }

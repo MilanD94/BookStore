@@ -2,31 +2,46 @@
 
 namespace BookStore.Data.Books
 {
-    public class BookRepository : IBookRepository
+    public class BookRepository(ApiDbContext apiDbContext) : IBookRepository
     {
+        private readonly ApiDbContext _apiDbContext = apiDbContext;
 
-        private readonly ApiDbContext _apiDbContext;
-
-        public BookRepository(ApiDbContext apiDbContext)
+        public Task<List<Book>> GetAllBooks()
         {
-            _apiDbContext = apiDbContext;
+            return Task.Run(() => GetQueryable().ToList());
         }
 
-        public async Task<List<Book?>> GetAllBooks()
-        {
-            return await Task.Run(() => GetQueryable().ToList());
-        }
-
-        public async Task<Book?> AddBook(Book book)
+        public Task<Book> AddBook(Book book)
         {
             var result = _apiDbContext.Books?.Add(book)!;
 
-            await _apiDbContext.SaveChangesAsync();
- 
-            return result.Entity;
+            _apiDbContext.SaveChangesAsync();
+
+            return Task.Run(() => result.Entity)!;
         }
 
-        private IQueryable<Book?> GetQueryable()
+        public Task<Book> GetBookById(Guid? id)
+        {
+            var book = _apiDbContext.Books?.FirstOrDefault(x => x.Id == id);
+
+            return Task.Run(() => book)!;
+        }
+
+        public Task<Book> UpdateBook(Book book)
+        {
+            var updatedBook = _apiDbContext.Books?.Update(book);
+            _apiDbContext.SaveChangesAsync();
+
+            return Task.Run(() => updatedBook!.Entity)!;
+        }
+
+        public async Task DeleteBook(Book book)
+        {
+            _apiDbContext.Books?.Remove(book);
+            await _apiDbContext.SaveChangesAsync();
+        }
+
+        private IQueryable<Book> GetQueryable()
         {
             var books = _apiDbContext.Books;
 

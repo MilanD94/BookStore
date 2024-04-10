@@ -1,5 +1,8 @@
-﻿using BookStore.API.Requests;
-using BookStore.Application.Books.Commands;
+﻿using AutoMapper;
+using BookStore.API.Requests.Books;
+using BookStore.Application.Books.Commands.AddBook;
+using BookStore.Application.Books.Commands.DeleteBook;
+using BookStore.Application.Books.Commands.UpdateBook;
 using BookStore.Application.Books.Queries.GetAllBooks;
 using BookStore.Application.DTOs;
 using MediatR;
@@ -8,17 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookStore.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class BooksController : ControllerBase
+    [Route("books")]
+    public class BooksController(IMediator mediator, IMapper mapper) : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _mediator = mediator;
+        private readonly IMapper _mapper = mapper;
 
-        public BooksController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        [HttpGet(Name = "GetAllBooks")]
+        [HttpGet]
         [ProducesResponseType(typeof(List<BookRepresentation>), StatusCodes.Status200OK)]
         public async Task<List<BookRepresentation>> GetAllBooks()
         {
@@ -32,16 +31,37 @@ namespace BookStore.API.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> AddBook(AddBookRequest request)
         {
-            await _mediator.Send(new AddBookCommand
-            {
-                Name = request.Name,
-                Description = request.Description,
-                Author = request.Author,
-                PublishDate = request.PublishDate,
-            });
+            var command = _mapper.Map<AddBookRequest, AddBookCommand>(request);
+
+            await _mediator.Send(command);
 
             return Ok();
         }
 
+        [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UpdateBook([FromRoute] Guid id, UpdateBookRequest request)
+        {
+            var command = _mapper.Map<UpdateBookRequest, UpdateBookCommand>(request);
+            command.Id = id;
+
+            await _mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteBook([FromRoute] Guid id)
+        {
+            await _mediator.Send(new DeleteBookCommand
+            {
+                Id = id
+            });
+
+            return Ok();
+        }
     }
 }

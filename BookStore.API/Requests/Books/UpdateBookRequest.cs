@@ -1,9 +1,9 @@
-﻿using BookStore.Application.DTOs;
-using MediatR;
+﻿using System.Diagnostics.CodeAnalysis;
 
-namespace BookStore.Application.Books.Commands
+namespace BookStore.API.Requests.Books
 {
-    public class AddBookCommand : IRequest<BookRepresentation>
+    [ExcludeFromCodeCoverage]
+    public class UpdateBookRequest
     {
         public string? Name { get; set; }
         public string? Author { get; set; }
