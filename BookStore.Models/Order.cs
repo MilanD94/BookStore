@@ -7,9 +7,14 @@
         public string? Address { get; set; }
         public string? Telephone { get; set; }
         public string? City { get; set; }
-        public string? TotalAmount { get; set; }
         public string? Status { get; set; }
         public virtual List<Book>? Books { get; set; }
+        public decimal TotalAmount { get; set; }
+
+        public void SetTotalAmount(decimal amount)
+        {
+            TotalAmount = amount;
+        }
 
     }
 }

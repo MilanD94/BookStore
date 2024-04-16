@@ -17,9 +17,12 @@ namespace BookStore.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Book>()
-                .HasMany(x => x.Categories);
+                .HasOne(x => x.Category);
 
             modelBuilder.Entity<Inventory>()
+                .HasMany(x => x.Books);
+
+            modelBuilder.Entity<Category>()
                 .HasMany(x => x.Books);
 
             modelBuilder.Entity<Order>()

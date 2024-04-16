@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using BookStore.API.Requests.Books;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BookStore.API.Requests.Orders
 {
@@ -9,7 +10,6 @@ namespace BookStore.API.Requests.Orders
         public string? Address { get; set; }
         public string? Telephone { get; set; }
         public string? City { get; set; }
-        public string? TotalAmount { get; set; }
-        public string? Status { get; set; }
+        public IEnumerable<Guid>? Books { get; set; }
     }
 }

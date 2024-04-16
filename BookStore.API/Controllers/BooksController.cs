@@ -27,8 +27,8 @@ namespace BookStore.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddBook(AddBookRequest request)
         {
             var command = _mapper.Map<AddBookRequest, AddBookCommand>(request);
@@ -39,8 +39,8 @@ namespace BookStore.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateBook([FromRoute] Guid id, UpdateBookRequest request)
         {
             var command = _mapper.Map<UpdateBookRequest, UpdateBookCommand>(request);
@@ -52,8 +52,8 @@ namespace BookStore.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteBook([FromRoute] Guid id)
         {
             await _mediator.Send(new DeleteBookCommand

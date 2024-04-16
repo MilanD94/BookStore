@@ -18,7 +18,7 @@ namespace BookStore.Application.Metrics
         private int _totalCategories = 0;
 
         // Order meters
-        private readonly Histogram<double> _ordersPriceHistogram;
+        private readonly Histogram<decimal> _ordersPriceHistogram;
         private readonly Histogram<int> _numberOfBooksPerOrderHistogram;
         private readonly ObservableCounter<int> _ordersCancelledCounter;
         private int _ordersCancelled = 0;
@@ -38,7 +38,7 @@ namespace BookStore.Application.Metrics
             _categoriesUpdatedCount = meter.CreateCounter<int>("categories_updated_count");
             _totalCategoriesGauge = meter.CreateObservableGauge<int>("total_categories_gauge", () => _totalCategories);
 
-            _ordersPriceHistogram = meter.CreateHistogram<double>("orders_price");
+            _ordersPriceHistogram = meter.CreateHistogram<decimal>("orders_price");
             _numberOfBooksPerOrderHistogram = meter.CreateHistogram<int>("orders_number_of_books");
             _ordersCancelledCounter = meter.CreateObservableCounter<int>("orders_cancelled", () => _ordersCancelled);
             _totalOrdersCounter = meter.CreateCounter<int>("total_orders_count");
@@ -59,7 +59,7 @@ namespace BookStore.Application.Metrics
         public void DecreaseTotalCategories() => _totalCategories--;
 
         // Orders meters
-        public void RecordOrderTotalPrice(double price) => _ordersPriceHistogram.Record(price);
+        public void RecordOrderTotalPrice(decimal price) => _ordersPriceHistogram.Record(price);
         public void RecordNumberOfBooks(int amount) => _numberOfBooksPerOrderHistogram.Record(amount);
         public void IncreaseOrdersCanceled() => _ordersCancelled++;
         public void IncreaseTotalOrders(string city) => _totalOrdersCounter.Add(1, KeyValuePair.Create<string, object>("City", city)!);

@@ -5,6 +5,10 @@ namespace BookStore.Data.Categories
     public class CategoryRepository(ApiDbContext apiDbContext) : ICategoryRepository
     {
         private readonly ApiDbContext _apiDbContext = apiDbContext;
+        public Task<List<Category>> GetAllCategories()
+        {
+            return Task.Run(() => GetQueryable().ToList());
+        }
 
         public Task<Category> AddCategory(Category category)
         {
@@ -34,6 +38,13 @@ namespace BookStore.Data.Categories
         {
             _apiDbContext.Categories?.Remove(category);
             await _apiDbContext.SaveChangesAsync();
+        }
+
+        private IQueryable<Category> GetQueryable()
+        {
+            var categories = _apiDbContext.Categories;
+
+            return categories;
         }
     }
 }

@@ -16,7 +16,6 @@ namespace BookStore.Application.Orders.Commands.UpdateOrder
             orderToUpdate.Address = request.Address;
             orderToUpdate.City = request.City;
             orderToUpdate.Status = request.Status;
-            orderToUpdate.TotalAmount = request.TotalAmount;
             orderToUpdate.CustomerName = request.CustomerName;
             orderToUpdate.UpdateDate = DateTime.UtcNow;
 
