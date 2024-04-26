@@ -1,4 +1,5 @@
 ﻿using BookStore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Data.Books
 {
@@ -8,7 +9,10 @@ namespace BookStore.Data.Books
 
         public Task<List<Book>> GetAllBooks()
         {
-            return Task.Run(() => GetQueryable().ToList());
+            var books = _apiDbContext.Books.Include(x => x.Category)
+                                           .ToListAsync();
+
+            return books;
         }
 
         public Task<Book> AddBook(Book book)
@@ -22,7 +26,9 @@ namespace BookStore.Data.Books
 
         public Task<Book> GetBookById(Guid? id)
         {
-            var book = _apiDbContext.Books?.FirstOrDefault(x => x.Id == id);
+            var book = _apiDbContext.Books?.Include(x => x.Category)
+                                           .Where(x => x.Id == id)
+                                           .FirstOrDefaultAsync();
 
             return Task.Run(() => book)!;
         }
@@ -39,13 +45,6 @@ namespace BookStore.Data.Books
         {
             _apiDbContext.Books?.Remove(book);
             await _apiDbContext.SaveChangesAsync();
-        }
-
-        private IQueryable<Book> GetQueryable()
-        {
-            var books = _apiDbContext.Books;
-
-            return books;
         }
     }
 }

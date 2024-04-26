@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BookStore.Application.DTOs;
 using BookStore.Application.Metrics;
 using BookStore.Data.Books;
 using BookStore.Models;
@@ -7,30 +6,36 @@ using MediatR;
 
 namespace BookStore.Application.Books.Commands.AddBook
 {
-    public class AddBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics meters, IMapper mapper) : IRequestHandler<AddBookCommand, BookRepresentation>
+    public class AddBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics meters, IMapper mapper) : IRequestHandler<AddBookCommand, Unit>
     {
         private readonly IBookRepository _bookRepository = bookRepository;
         private readonly BookStoreMetrics _meters = meters;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<BookRepresentation> Handle(AddBookCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(AddBookCommand request, CancellationToken cancellationToken)
         {
-            var book = new Book
+            var bookToAdd = new Book
             {
                 Author = request.Author,
+                CategoryId = request.CategoryId,
                 Description = request.Description,
                 Name = request.Name,
-                CrationDate = DateTime.UtcNow,
-                PublishDate = request.PublishDate
+                Value = request.Value,
+                PublishDate = request.PublishDate,
+                CrationDate = DateTime.UtcNow
             };
 
-            var result = await _bookRepository.AddBook(book);
+            await _bookRepository.AddBook(bookToAdd);
+
+            AddMetrics();
+
+            return Unit.Value;
+        }
+
+        private void AddMetrics()
+        {
             _meters.AddBook();
             _meters.IncreaseTotalBooks();
-
-            var response = _mapper.Map<Book, BookRepresentation>(result);
-
-            return response;
         }
     }
 }

@@ -17,6 +17,8 @@ namespace BookStore.Application.Books.Commands.UpdateBook
             bookToUpdate.Name = request.Name;
             bookToUpdate.PublishDate = request.PublishDate;
             bookToUpdate.UpdateDate = DateTime.UtcNow;
+            bookToUpdate.Value = request.Value;
+            bookToUpdate.CategoryId = request.CategoryId;
 
             await _bookRepository.UpdateBook(bookToUpdate!);
             _meters.UpdateBook();

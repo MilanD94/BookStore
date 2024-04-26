@@ -14,7 +14,11 @@ namespace BookStore.Data.Orders
 
         public Task<List<Order>> GetOrdersByBookId(Guid bookId)
         {
-            var orders = _apiDbContext.Orders.Where(x => x.Books!.Any(x => x.Id == bookId)).ToList();
+            var orders = _apiDbContext.Orders
+                .Include(x => x.Books)
+                .Where(x => x.Books!
+                .Any(x => x.Id == bookId))
+                .ToList();
 
             return Task.Run(() => orders);
         }
@@ -33,14 +37,6 @@ namespace BookStore.Data.Orders
             var order = _apiDbContext.Orders?.FirstOrDefault(x => x.Id == id);
 
             return Task.Run(() => order)!;
-        }
-
-        public Task<Order> UpdateOrder(Order order)
-        {
-            var result = _apiDbContext.Orders?.Update(order);
-            _apiDbContext.SaveChangesAsync();
-
-            return Task.Run(() => result!.Entity)!;
         }
 
         private IQueryable<Order?> GetQueryable()

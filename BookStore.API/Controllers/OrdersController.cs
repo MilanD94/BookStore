@@ -2,7 +2,6 @@
 using BookStore.API.Requests.Orders;
 using BookStore.Application.DTOs;
 using BookStore.Application.Orders.Commands.AddOrder;
-using BookStore.Application.Orders.Commands.UpdateOrder;
 using BookStore.Application.Orders.Queries.GetAllOrders;
 using BookStore.Application.Orders.Queries.GetOrdersByBookId;
 using MediatR;
@@ -28,6 +27,7 @@ namespace BookStore.API.Controllers
 
         [HttpGet("{bookId}")]
         [ProducesResponseType(typeof(List<OrderRepresentation>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<List<OrderRepresentation>> GetOrdersByBookId([FromRoute] Guid bookId)
         {
             var result = await _mediator.Send(new GetOrderByBookIdQuery()
@@ -39,24 +39,11 @@ namespace BookStore.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddOrder(AddOrderRequest request)
         {
             var command = _mapper.Map<AddOrderRequest, AddOrderCommand>(request);
-
-            await _mediator.Send(command);
-
-            return Ok();
-        }
-
-        [HttpPut("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> UpdateOrder([FromRoute] Guid id, UpdateOrderRequest request)
-        {
-            var command = _mapper.Map<UpdateOrderRequest, UpdateOrderCommand>(request);
-            command.Id = id;
 
             await _mediator.Send(command);
 

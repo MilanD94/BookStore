@@ -3,6 +3,7 @@ using System;
 using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookStore.Data.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240415083133_AddValue_BookTable")]
+    partial class AddValue_BookTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,9 +49,6 @@ namespace BookStore.Data.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("CategoryId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("CrationDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -61,8 +61,8 @@ namespace BookStore.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("PublishDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("PublishDate")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
@@ -71,8 +71,6 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("InventoryId");
 
@@ -85,6 +83,9 @@ namespace BookStore.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime?>("CrationDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -95,6 +96,8 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("Category", (string)null);
                 });
@@ -143,9 +146,6 @@ namespace BookStore.Data.Migrations
                     b.Property<string>("Telephone")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -171,20 +171,21 @@ namespace BookStore.Data.Migrations
 
             modelBuilder.Entity("BookStore.Models.Book", b =>
                 {
-                    b.HasOne("BookStore.Models.Category", "Category")
-                        .WithMany("Books")
-                        .HasForeignKey("CategoryId");
-
                     b.HasOne("BookStore.Models.Inventory", null)
                         .WithMany("Books")
                         .HasForeignKey("InventoryId");
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("BookStore.Models.Category", b =>
                 {
-                    b.Navigation("Books");
+                    b.HasOne("BookStore.Models.Book", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("BookId");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Book", b =>
+                {
+                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("BookStore.Models.Inventory", b =>

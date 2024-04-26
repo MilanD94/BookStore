@@ -1,36 +1,67 @@
-﻿using BookStore.Application.DTOs;
+﻿using AutoMapper;
 using BookStore.Application.Metrics;
+using BookStore.Data.Books;
 using BookStore.Data.Orders;
 using BookStore.Models;
 using MediatR;
 
 namespace BookStore.Application.Orders.Commands.AddOrder
 {
-    public class AddOrderCommandHandler(IOrderRepository orderRepository, BookStoreMetrics meters) : IRequestHandler<AddOrderCommand, OrderRepresentation>
+    public class AddOrderCommandHandler : IRequestHandler<AddOrderCommand, Unit>
     {
-        private readonly IOrderRepository _orderRepository = orderRepository;
-        private readonly BookStoreMetrics _meters = meters;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IBookRepository _bookRepository;
+        private readonly BookStoreMetrics _meters;
+        private readonly IMapper _mapper;
 
-        public async Task<OrderRepresentation> Handle(AddOrderCommand request, CancellationToken cancellationToken)
+        public AddOrderCommandHandler(IOrderRepository orderRepository, IBookRepository bookRepository,
+                                      BookStoreMetrics meters, IMapper mapper)
         {
-            var order = new Order
+            _orderRepository = orderRepository;
+            _bookRepository = bookRepository;
+            _meters = meters;
+            _mapper = mapper;
+        }
+
+        public async Task<Unit> Handle(AddOrderCommand request, CancellationToken cancellationToken)
+        {
+            decimal sum = 0;
+            List<Book> orderBooks = [];
+
+            foreach (var bookId in request.Books!)
             {
-                CustomerName = request.CustomerName,
-                Status = request.Status,
-                Address = request.Address,  
-                City = request.City,
-                Telephone = request.Telephone,
-                TotalAmount = request.TotalAmount,
+                var orderingBook = await _bookRepository.GetBookById(bookId);
+
+                if (orderingBook is not null)
+                {
+                    orderBooks.Add(orderingBook);
+                    sum += orderingBook.Value;
+                }
+            }
+
+            var orderToAdd = new Order
+            {
+                Address = request.Address,
+                Books = orderBooks,
                 CrationDate = DateTime.UtcNow,
+                City = request.City,
+                CustomerName = request.CustomerName,
+                Telephone = request.Telephone,
             };
 
-            var result = await _orderRepository.AddOrder(order);
+            orderToAdd.SetTotalAmount(sum);
 
-            _meters.RecordOrderTotalPrice(double.Parse(result!.TotalAmount!));
-            //_meters.RecordNumberOfBooks(result.Books!.Count);
-            _meters.IncreaseTotalOrders(result.City!);
+            var result = await _orderRepository.AddOrder(orderToAdd);
+            AddMetrics(result);
+            _meters.RecordNumberOfBooks(orderBooks.Count);
 
-            return new OrderRepresentation { };
+            return Unit.Value;
+        }
+
+        private void AddMetrics(Order order)
+        {
+            _meters.RecordOrderTotalPrice(order.TotalAmount);
+            _meters.IncreaseTotalOrders(order.City!);
         }
     }
 }

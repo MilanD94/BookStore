@@ -15,7 +15,6 @@ namespace BookStore.Application.Categories.Commands.DeleteCategory
 
             await _categoryRepository.DeleteCategory(category!);
             _meters.DeleteCategory();
-            _meters.DecreaseTotalCategories();
 
             return Unit.Value;
         }

@@ -6,7 +6,9 @@ namespace BookStore.Application.Books.Commands.Common
     {
         public BookProfileMapper()
         {
-            CreateMap<Models.Book, DTOs.BookRepresentation>();
+            CreateMap<Models.Book, DTOs.BookRepresentation>()
+                .ForPath(dest => dest.CategoryName, act => act.MapFrom(src => src.Category!.Name))
+                .ForPath(dest => dest.CategoryId, act => act.MapFrom(src => src.Category!.Id));
         }
     }
 }

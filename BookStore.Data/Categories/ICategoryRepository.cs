@@ -8,6 +8,7 @@ namespace BookStore.Data.Categories
         Task<Category> UpdateCategory(Category category);
         Task DeleteCategory(Category category);
         Task<Category> GetCategoryById(Guid? id);
+        Task<List<Category>> GetAllCategories();
 
     }
 }
