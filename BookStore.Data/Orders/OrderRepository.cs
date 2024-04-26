@@ -39,21 +39,6 @@ namespace BookStore.Data.Orders
             return Task.Run(() => order)!;
         }
 
-        public Task<Order> UpdateOrder(Order order)
-        {
-            var result = _apiDbContext.Orders?.Update(order);
-            _apiDbContext.SaveChangesAsync();
-
-            return Task.Run(() => result!.Entity)!;
-        }
-
-        public async Task DeleteOrder(Order order)
-        {
-            _apiDbContext.Orders?.Remove(order);
-            await _apiDbContext.SaveChangesAsync();
-        }
-
-
         private IQueryable<Order?> GetQueryable()
         {
             var orders = _apiDbContext.Orders.Include(x => x.Books);

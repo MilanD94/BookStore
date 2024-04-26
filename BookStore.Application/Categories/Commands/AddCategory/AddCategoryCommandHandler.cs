@@ -28,7 +28,6 @@ namespace BookStore.Application.Categories.Commands.AddCategory
         private void AddMetrics()
         {
             _meters.AddCategory();
-            _meters.IncreaseTotalCategories();
         }
     }
 }
