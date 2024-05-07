@@ -5,10 +5,9 @@ using MediatR;
 
 namespace BookStore.Application.Categories.Commands.AddCategory
 {
-    public class AddCategoryCommandHandler(ICategoryRepository categoryRepository, BookStoreMetrics meters) : IRequestHandler<AddCategoryCommand, Unit>
+    public class AddCategoryCommandHandler(ICategoryRepository categoryRepository, BookStoreMetrics bookStoreMetrics) : IRequestHandler<AddCategoryCommand, Unit>
     {
         private readonly ICategoryRepository _categoryRepository = categoryRepository;
-        private readonly BookStoreMetrics _meters = meters;
 
         public async Task<Unit> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
@@ -27,7 +26,7 @@ namespace BookStore.Application.Categories.Commands.AddCategory
 
         private void AddMetrics()
         {
-            _meters.AddCategory();
+            bookStoreMetrics.AddCategory();
         }
     }
 }

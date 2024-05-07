@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Diagnostics.Metrics;
+﻿using System.Diagnostics.Metrics;
 
 namespace BookStore.Application.Metrics
 {
@@ -25,8 +24,9 @@ namespace BookStore.Application.Metrics
 
         public BookStoreMetrics(IMeterFactory meterFactory)
         {
+            // metrics_bookstore_books_added_count
             var meter = meterFactory.Create("Metrics.BookStore");
-            
+
             _booksAddedCount = meter.CreateCounter<int>("books_added_count");
             _booksDeletedCount = meter.CreateCounter<int>("books_deleted_count");
             _booksUpdatedCount = meter.CreateCounter<int>("books_updated_count");
@@ -35,9 +35,10 @@ namespace BookStore.Application.Metrics
             _categoriesAddedCount = meter.CreateCounter<int>("categories_added_count");
             _categoriesDeletedCount = meter.CreateCounter<int>("categories_deleted_count");
             _categoriesUpdatedCount = meter.CreateCounter<int>("categories_updated_count");
-
+            
             _ordersPriceHistogram = meter.CreateHistogram<decimal>("orders_price");
             _numberOfBooksPerOrderHistogram = meter.CreateHistogram<int>("orders_number_of_books");
+
             _totalOrdersCounter = meter.CreateCounter<int>("total_orders_count");
         }
 

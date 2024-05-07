@@ -586,10 +586,7 @@
       "pluginVersion": "8.2.0-33922pre",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "Prometheus",
           "editorMode": "code",
           "expr": "metrics_bookstore_books_deleted_count",
           "instant": true,
@@ -835,10 +832,7 @@
       "pluginVersion": "8.2.0-33922pre",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "Prometheus",
           "editorMode": "code",
           "expr": "metrics_bookstore_categories_deleted_count",
           "instant": true,

@@ -4,18 +4,17 @@ using MediatR;
 
 namespace BookStore.Application.Books.Commands.DeleteBook
 {
-    public class DeleteBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics meters) : IRequestHandler<DeleteBookCommand, Unit>
+    public class DeleteBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics bookStoreMetrics) : IRequestHandler<DeleteBookCommand, Unit>
     {
         private readonly IBookRepository _bookRepository = bookRepository;
-        private readonly BookStoreMetrics _meters = meters;
 
         public async Task<Unit> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
             var result = await _bookRepository.GetBookById(request.Id) ?? throw new Exception("Book is not found.");
 
             await _bookRepository.DeleteBook(result!);
-            _meters.DeleteBook();
-            _meters.DecreaseTotalBooks();
+            bookStoreMetrics.DeleteBook();
+            bookStoreMetrics.DecreaseTotalBooks();
 
             return Unit.Value;
         }

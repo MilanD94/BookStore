@@ -6,11 +6,9 @@ using MediatR;
 
 namespace BookStore.Application.Books.Commands.AddBook
 {
-    public class AddBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics meters, IMapper mapper) : IRequestHandler<AddBookCommand, Unit>
+    public class AddBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics bookStoreMetrics) : IRequestHandler<AddBookCommand, Unit>
     {
         private readonly IBookRepository _bookRepository = bookRepository;
-        private readonly BookStoreMetrics _meters = meters;
-        private readonly IMapper _mapper = mapper;
 
         public async Task<Unit> Handle(AddBookCommand request, CancellationToken cancellationToken)
         {
@@ -34,8 +32,8 @@ namespace BookStore.Application.Books.Commands.AddBook
 
         private void AddMetrics()
         {
-            _meters.AddBook();
-            _meters.IncreaseTotalBooks();
+            bookStoreMetrics.AddBook();
+            bookStoreMetrics.IncreaseTotalBooks();
         }
     }
 }

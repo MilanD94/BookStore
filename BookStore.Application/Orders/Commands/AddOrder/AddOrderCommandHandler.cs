@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BookStore.Application.Metrics;
+﻿using BookStore.Application.Metrics;
 using BookStore.Data.Books;
 using BookStore.Data.Orders;
 using BookStore.Models;
@@ -7,21 +6,11 @@ using MediatR;
 
 namespace BookStore.Application.Orders.Commands.AddOrder
 {
-    public class AddOrderCommandHandler : IRequestHandler<AddOrderCommand, Unit>
+    public class AddOrderCommandHandler(IOrderRepository orderRepository, IBookRepository bookRepository,
+                                  BookStoreMetrics bookStoreMetrics) : IRequestHandler<AddOrderCommand, Unit>
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly BookStoreMetrics _meters;
-        private readonly IMapper _mapper;
-
-        public AddOrderCommandHandler(IOrderRepository orderRepository, IBookRepository bookRepository,
-                                      BookStoreMetrics meters, IMapper mapper)
-        {
-            _orderRepository = orderRepository;
-            _bookRepository = bookRepository;
-            _meters = meters;
-            _mapper = mapper;
-        }
+        private readonly IOrderRepository _orderRepository = orderRepository;
+        private readonly IBookRepository _bookRepository = bookRepository;
 
         public async Task<Unit> Handle(AddOrderCommand request, CancellationToken cancellationToken)
         {
@@ -53,15 +42,15 @@ namespace BookStore.Application.Orders.Commands.AddOrder
 
             var result = await _orderRepository.AddOrder(orderToAdd);
             AddMetrics(result);
-            _meters.RecordNumberOfBooks(orderBooks.Count);
+            bookStoreMetrics.RecordNumberOfBooks(orderBooks.Count);
 
             return Unit.Value;
         }
 
         private void AddMetrics(Order order)
         {
-            _meters.RecordOrderTotalPrice(order.TotalAmount);
-            _meters.IncreaseTotalOrders(order.City!);
+            bookStoreMetrics.RecordOrderTotalPrice(order.TotalAmount);
+            bookStoreMetrics.IncreaseTotalOrders(order.City!);
         }
     }
 }

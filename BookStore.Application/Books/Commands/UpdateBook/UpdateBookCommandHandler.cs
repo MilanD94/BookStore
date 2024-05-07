@@ -4,10 +4,9 @@ using MediatR;
 
 namespace BookStore.Application.Books.Commands.UpdateBook
 {
-    public class UpdateBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics meters) : IRequestHandler<UpdateBookCommand, Unit>
+    public class UpdateBookCommandHandler(IBookRepository bookRepository, BookStoreMetrics bookStoreMetrics) : IRequestHandler<UpdateBookCommand, Unit>
     {
         private readonly IBookRepository _bookRepository = bookRepository;
-        private readonly BookStoreMetrics _meters = meters;
 
         public async Task<Unit> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
         {
@@ -21,7 +20,7 @@ namespace BookStore.Application.Books.Commands.UpdateBook
             bookToUpdate.CategoryId = request.CategoryId;
 
             await _bookRepository.UpdateBook(bookToUpdate!);
-            _meters.UpdateBook();
+            bookStoreMetrics.UpdateBook();
 
             return Unit.Value;
         }

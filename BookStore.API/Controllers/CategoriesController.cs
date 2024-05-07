@@ -15,7 +15,6 @@ namespace BookStore.API.Controllers
     {
         private readonly IMediator _mediator = mediator;
 
-
         [HttpGet]
         [ProducesResponseType(typeof(List<CategoryRepresentation>), StatusCodes.Status200OK)]
         public async Task<List<CategoryRepresentation>> GetAllCategories()
