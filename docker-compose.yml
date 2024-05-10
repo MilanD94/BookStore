@@ -6,8 +6,7 @@ services:
     hostname: bookstore.api
     image: ${DOCKER_REGISTRY-}bookstoreapi
     ports:
-      - 8082:8080
-      - 8084:443
+      - "8082:8080"
     networks:
       - ww
     build:

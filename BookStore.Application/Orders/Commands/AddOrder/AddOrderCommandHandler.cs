@@ -11,22 +11,11 @@ namespace BookStore.Application.Orders.Commands.AddOrder
     {
         private readonly IOrderRepository _orderRepository = orderRepository;
         private readonly IBookRepository _bookRepository = bookRepository;
+        private decimal sum = 0;
 
         public async Task<Unit> Handle(AddOrderCommand request, CancellationToken cancellationToken)
         {
-            decimal sum = 0;
-            List<Book> orderBooks = [];
-
-            foreach (var bookId in request.Books!)
-            {
-                var orderingBook = await _bookRepository.GetBookById(bookId);
-
-                if (orderingBook is not null)
-                {
-                    orderBooks.Add(orderingBook);
-                    sum += orderingBook.Value;
-                }
-            }
+            var orderBooks = FetchExistingBooksForOrdering(request);
 
             var orderToAdd = new Order
             {
@@ -45,6 +34,24 @@ namespace BookStore.Application.Orders.Commands.AddOrder
             bookStoreMetrics.RecordNumberOfBooks(orderBooks.Count);
 
             return Unit.Value;
+        }
+
+        private List<Book> FetchExistingBooksForOrdering(AddOrderCommand request)
+        {
+            List<Book> result = [];
+
+            foreach (var bookId in request.Books!)
+            {
+                var orderingBook = _bookRepository.GetBookById(bookId);
+
+                if (orderingBook is not null)
+                {
+                    result.Add(orderingBook.Result);
+                    sum += orderingBook.Result.Value;
+                }
+            }
+
+            return result;
         }
 
         private void AddMetrics(Order order)
