@@ -1,0 +1,151 @@
+﻿openapi: 3.0.1
+paths:
+  /authors:
+    get:
+      tags:
+        - Authors
+      parameters:
+        - name: authorName
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/SearchAuthorsRepresentation'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchAuthorsRepresentation'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/SearchAuthorsRepresentation'
+components:
+  schemas:
+    SearchAuthorsRepresentation:
+      type: object
+      properties:
+        authors_found:
+          type: integer
+          format: int32
+          example: 0
+          nullable: true
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchAuthor'
+          nullable: true
+      additionalProperties: false
+    AuthorBase:
+      type: object
+      properties:
+        open_library_id:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        alternate_names:
+          type: array
+          items:
+            type: string
+          nullable: true
+        birth_date:
+          type: string
+          nullable: true
+        death_date:
+          type: string
+          nullable: true
+      additionalProperties: false
+    SearchAuthor:
+      allOf:
+      - $ref: '#/components/schemas/AuthorBase'
+      - type: object
+        properties:
+          top_subjects:
+            type: array
+            items:
+              type: string
+          top_work:
+            type: string
+            nullable: true
+          type:
+            type: string
+            nullable: true
+          work_count:
+            type: integer
+            format: int32
+            nullable: true
+        additionalProperties: false
+      additionalProperties: false
+    GetAuthorRepresentation:
+      allOf:
+      - $ref: '#/components/schemas/AuthorBase'
+      - type: object
+        properties:
+          photos:
+            type: array
+            items:
+              type: integer
+              format: int32
+          source_records:
+            type: array
+            items:
+              type: string
+          type:
+            $ref: '#/components/schemas/KeyType'
+            nullable: true
+          remote_ids:
+            $ref: '#/components/schemas/RemoteIds'
+            nullable: true
+          bio:
+            type: string
+            nullable: true
+          latest_revision:
+            type: integer
+            format: int32
+            nullable: true
+          revisions:
+            type: integer
+            format: int32
+            nullable: true
+          created:
+            $ref: '#/components/schemas/Timestamp'
+            nullable: true
+          last_modified:
+            $ref: '#/components/schemas/Timestamp'
+            nullable: true
+        additionalProperties: false
+      additionalProperties: false
+    KeyType:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RemoteIds:
+      type: object
+      properties:
+        wikidata:
+          type: string
+          nullable: true
+        viaf:
+          type: string
+          nullable: true
+        isni:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Timestamp:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
