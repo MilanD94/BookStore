@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BookStore.Application\BookStore.Application.csproj" />
+		<ProjectReference Include="..\BookStore.Connectors.OpenLibrary\BookStore.Connectors.OpenLibrary.csproj" />
 	</ItemGroup>
 
 </Project>
